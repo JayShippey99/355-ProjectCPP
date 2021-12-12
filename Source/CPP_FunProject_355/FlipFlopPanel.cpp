@@ -15,14 +15,14 @@ AFlipFlopPanel::AFlipFlopPanel()
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 
-	//hinge = CreateDefaultSubobject<USceneComponent>(FName("the hinge"));
-	//hinge->SetupAttachment(RootComponent);
+	hinge = CreateDefaultSubobject<USceneComponent>(FName("the hinge"));
+	hinge->SetupAttachment(RootComponent);
 
 	collider = CreateDefaultSubobject<UBoxComponent>(FName("the collider"));
-	collider->SetupAttachment(RootComponent);
+	collider->SetupAttachment(hinge);
 
 	platform = CreateDefaultSubobject<UStaticMeshComponent>(FName("the platform"));
-	platform->SetupAttachment(RootComponent);
+	platform->SetupAttachment(hinge);
 
 	PlatformAnim = CreateDefaultSubobject<UTimelineComponent>(TEXT("PlatformTimeline")); // the text is the internal name for it, nick doesn't know where it gets used though
 
@@ -30,6 +30,7 @@ AFlipFlopPanel::AFlipFlopPanel()
 
 	if (TheCubeMesh.Succeeded()) { // or thecubemesh.object
 		platform->SetStaticMesh(TheCubeMesh.Object);
+		//hinge->SetStaticMesh(TheCubeMesh.Object);
 	}
 	//TheCubeMesh.Object
 
@@ -39,11 +40,15 @@ AFlipFlopPanel::AFlipFlopPanel()
 
 void AFlipFlopPanel::OnAnimUpdate(float val) { // the value of the curve is being sent in 
 
-	FRotator rot(val * 180, 0, 0);
+	//FVector forward = GetActorForwardVector()
 
-	if (isFlipped) rot *= -1;
 
-	SetActorRotation(FRotator(rot));
+	FRotator rot(val * 180, 0, 0); // fix this another day
+
+
+	//if (isFlipped) rot *= -1; // we really wanna get this to work. I guess we 
+	// why isn't this working now??
+	hinge->SetRelativeRotation(FRotator(rot));
 }
 
 // Called when the game starts or when spawned
@@ -81,8 +86,13 @@ void AFlipFlopPanel::OnConstruction(const FTransform& xform)
 {
 	Super::OnConstruction(xform); // what is the xform
 
+
+
 	platform->SetWorldScale3D(FVector(platformSize, platformSize, platformThickness) / 100);
 	platform->SetRelativeLocation(FVector(platformSize / 2, 0, 0));
+
+	//hinge->SetWorldScale3D(FVector(platformSize, platformThickness + 5, platformThickness + 5) / 100);
+
 
 	//hinge->SetRelativeLocation(FVector(-platformSize / 2, 0, 0));
 
@@ -109,7 +119,7 @@ void AFlipFlopPanel::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void AFlipFlopPanel::Flip()
 {
-	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Purple, "FLIP!");
+	//if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Purple, "FLIP!");
 
 
 	if (isOpen) {

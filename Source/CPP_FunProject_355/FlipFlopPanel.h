@@ -36,8 +36,8 @@ public:
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		//class USceneComponent* TheRoot;
 	// scene component for hinge
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-		//class USceneComponent* hinge;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		class USceneComponent* hinge;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		class UBoxComponent* collider;
@@ -82,10 +82,6 @@ public:
 	//virtual void Interact();
 
 	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	float flipDirection = 1;
-	float flipRate = 1;
-	float currentRotation = 0;
 
 	bool isFlipped = false;
 	bool isOpen = false;
